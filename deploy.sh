@@ -202,3 +202,19 @@ esac
         exit 1
         ;;
 esac
+
+# CORS-Fix Build und Deploy
+cors-fix:
+@echo "🔧 Building with CORS-Fix..."
+docker compose down --remove-orphans
+docker compose build --no-cache
+docker compose up -d
+@echo "✅ CORS-Fix deployed! App running on port 3000"
+@echo "🌐 API calls will be proxied through nginx to avoid CORS issues"
+
+# Test CORS-Fix
+test-cors:
+@echo "🧪 Testing CORS-Fix..."
+@curl -I http://localhost:3000/health || echo "Health check failed"
+@curl -I http://localhost:3000/api/health || echo "API proxy test - should return 404 but with CORS headers"
+

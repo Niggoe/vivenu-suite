@@ -15,11 +15,11 @@ export const API_CONFIGS: Record<string, ApiConfig> = {
         name: 'Development',
         apiUrl: import.meta.env.DEV
             ? '/api/vivenu-dev'  // Proxy-URL für Development
-            : (import.meta.env.VITE_VIVENU_DEV_API_URL || 'https://vivenu.dev/api').replace(/\/$/, ''), // Entferne trailing slash
+            : '/api',  // Production: nginx-Proxy zu vivenu.dev/api
         apiKey: import.meta.env.VITE_VIVENU_DEV_API_KEY || '',
         ticketsEndpoint: '/tickets',
         barcodeUpdateEndpoint: '/barcode/update',
-        description: 'Development-Umgebung für sichere Tests und Entwicklung (mit CORS-Proxy)',
+        description: 'Development-Umgebung für sichere Tests und Entwicklung (über nginx-Proxy)',
         color: '#3498db'
     },
 
@@ -27,11 +27,11 @@ export const API_CONFIGS: Record<string, ApiConfig> = {
         name: 'Live (Production)',
         apiUrl: import.meta.env.DEV
             ? '/api/vivenu'  // Proxy-URL für Development
-            : (import.meta.env.VITE_VIVENU_LIVE_API_URL || 'https://vivenu.com/api').replace(/\/$/, ''), // Entferne trailing slash
+            : '/api/live',  // Production: nginx-Proxy zu vivenu.com/api
         apiKey: import.meta.env.VITE_VIVENU_LIVE_API_KEY || '',
         ticketsEndpoint: '/tickets',
         barcodeUpdateEndpoint: '/barcode/update',
-        description: 'Live Production API - Echte Daten! Vorsicht! (mit CORS-Proxy)',
+        description: 'Live Production API - Echte Daten! Vorsicht! (über nginx-Proxy)',
         color: '#e74c3c'
     }
 }

@@ -14,7 +14,9 @@ const createVivenuApi = () => {
             'Content-Type': 'application/json',
             'Authorization': config.apiKey ? `Bearer ${config.apiKey}` : '',
             'X-API-Version': '1.0',
-            'User-Agent': 'Vivenu-Suite/1.0.0'
+            'User-Agent': 'Vivenu-Suite/1.0.0',
+            // Header für nginx-Proxy um zwischen dev/live zu unterscheiden
+            'X-Vivenu-Env': config.name.toLowerCase().includes('live') ? 'live' : 'dev'
         },
         timeout: 30000, // 30 Sekunden Timeout
     })
