@@ -38,11 +38,9 @@ export const API_CONFIGS: Record<string, ApiConfig> = {
 
 // Standard-Konfiguration basierend auf NODE_ENV
 export const getDefaultConfig = (): string => {
-    if (import.meta.env.PROD) {
-        return 'live'
-    } else {
-        return 'dev'
-    }
+    // Standardmäßig immer Dev-API verwenden (sicherer)
+    // User kann manuell auf Live umstellen
+    return 'dev'
 }
 
 // Aktuelle Konfiguration laden
