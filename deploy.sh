@@ -145,11 +145,39 @@ health_check() {
     docker-compose ps | grep "healthy\|Up"
 }
 
+# Export für DigitalOcean
+export_for_digitalocean() {
+    log_info "Exportiere Docker Image für DigitalOcean..."
+    
+    # Build first if needed
+    if ! docker images | grep -q "vivenufrontend-vivenu-suite"; then
+        log_info "Baue Image zuerst..."
+        ./build-with-api-keys.sh
+    fi
+    
+    # Create tar.gz export
+    log_info "Erstelle komprimiertes Image..."
+    docker save vivenufrontend-vivenu-suite:latest | gzip > vivenu-suite-fixed.tar.gz
+    
+    log_success "Image exportiert als: vivenu-suite-fixed.tar.gz"
+    log_info "Upload-Befehle für DigitalOcean:"
+    echo "scp vivenu-suite-fixed.tar.gz root@178.128.196.27:~/"
+    echo "ssh root@178.128.196.27"
+    echo "docker load < vivenu-suite-fixed.tar.gz"
+    echo "docker stop vivenu-suite-frontend || true"
+    echo "docker rm vivenu-suite-frontend || true" 
+    echo "docker run -d --name vivenu-suite-frontend -p 3000:80 vivenufrontend-vivenu-suite:latest"
+    log_success "Ready for DigitalOcean deployment!"
+}
+
 # Main
 case "$1" in
     "build")
         check_docker
         build_and_deploy $2
+        ;;
+    "export")
+        export_for_digitalocean
         ;;
     "dev")
         dev_mode
@@ -175,6 +203,7 @@ case "$1" in
         echo ""
         echo "Commands:"
         echo "  build    - Build und deploy die Anwendung in Docker"
+        echo "  export   - Exportiere Image für DigitalOcean Upload"
         echo "  clean    - Build mit cleanup alter Images"
         echo "  dev      - Starte Development Server (lokale Entwicklung)"
         echo "  logs     - Zeige Container-Logs"

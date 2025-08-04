@@ -13,9 +13,7 @@ export interface ApiConfig {
 export const API_CONFIGS: Record<string, ApiConfig> = {
     dev: {
         name: 'Development',
-        apiUrl: import.meta.env.DEV
-            ? '/api/vivenu-dev'  // Proxy-URL für Development
-            : '/api',  // Production: nginx-Proxy zu vivenu.dev/api
+        apiUrl: '/api',  // nginx-Proxy zu vivenu.dev/api
         apiKey: import.meta.env.VITE_VIVENU_DEV_API_KEY || '',
         ticketsEndpoint: '/tickets',
         barcodeUpdateEndpoint: '/barcode/update',
@@ -25,9 +23,7 @@ export const API_CONFIGS: Record<string, ApiConfig> = {
 
     live: {
         name: 'Live (Production)',
-        apiUrl: import.meta.env.DEV
-            ? '/api/vivenu'  // Proxy-URL für Development
-            : '/api/live',  // Production: nginx-Proxy zu vivenu.com/api
+        apiUrl: '/api/live',  // nginx-Proxy zu vivenu.com/api
         apiKey: import.meta.env.VITE_VIVENU_LIVE_API_KEY || '',
         ticketsEndpoint: '/tickets',
         barcodeUpdateEndpoint: '/barcode/update',
