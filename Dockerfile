@@ -7,6 +7,18 @@ FROM node:18-alpine AS builder
 # Set working directory
 WORKDIR /app
 
+# Build arguments for API keys (passed from docker-compose or build command)
+ARG VITE_VIVENU_DEV_API_KEY
+ARG VITE_VIVENU_LIVE_API_KEY
+ARG VITE_VIVENU_DEV_API_URL=https://vivenu.dev/api
+ARG VITE_VIVENU_LIVE_API_URL=https://vivenu.com/api
+
+# Set environment variables for Vite build
+ENV VITE_VIVENU_DEV_API_KEY=${VITE_VIVENU_DEV_API_KEY}
+ENV VITE_VIVENU_LIVE_API_KEY=${VITE_VIVENU_LIVE_API_KEY}
+ENV VITE_VIVENU_DEV_API_URL=${VITE_VIVENU_DEV_API_URL}
+ENV VITE_VIVENU_LIVE_API_URL=${VITE_VIVENU_LIVE_API_URL}
+
 # Copy package files first (for better Docker layer caching)
 COPY package*.json ./
 
@@ -53,13 +65,6 @@ USER vivenu
 
 # Expose ports
 EXPOSE 80
-
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost/ || exit 1
-
-# Start nginx
-CMD ["nginx", "-g", "daemon off;"]
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \

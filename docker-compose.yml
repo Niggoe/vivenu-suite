@@ -4,15 +4,14 @@ services:
       context: .
       dockerfile: Dockerfile
       target: production
+      args:
+        - VITE_VIVENU_DEV_API_KEY=${VITE_VIVENU_DEV_API_KEY}
+        - VITE_VIVENU_LIVE_API_KEY=${VITE_VIVENU_LIVE_API_KEY}
+        - VITE_VIVENU_DEV_API_URL=${VITE_VIVENU_DEV_API_URL:-https://vivenu.dev/api}
+        - VITE_VIVENU_LIVE_API_URL=${VITE_VIVENU_LIVE_API_URL:-https://vivenu.com/api}
     container_name: vivenu-suite-frontend
     ports:
       - "${VIVENU_PORT:-3000}:80"
-    environment:
-      - NODE_ENV=production
-      - VITE_VIVENU_DEV_API_URL=${VITE_VIVENU_DEV_API_URL:-https://vivenu.dev/api}
-      - VITE_VIVENU_DEV_API_KEY=${VITE_VIVENU_DEV_API_KEY}
-      - VITE_VIVENU_LIVE_API_URL=${VITE_VIVENU_LIVE_API_URL:-https://vivenu.com/api}
-      - VITE_VIVENU_LIVE_API_KEY=${VITE_VIVENU_LIVE_API_KEY}
     networks:
       - vivenu-network
     restart: unless-stopped
