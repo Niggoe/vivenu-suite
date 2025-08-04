@@ -201,14 +201,13 @@ export interface TicketBarcodeUpdateResponse {
                 return mockResult
             }
 
-            // Payload für die echte Vivenu API (direkter PUT-Endpunkt)
             const payload = {
                 barcode: convertedBarcode,
                 skipBarcodeValidation: true // Entspricht "skipBarcodeValidation" : "true" aus Python
             }
 
             console.log(`📤 API Payload:`, { ticketId, payload })
-            console.log(`🌐 API URL: ${config.apiUrl}/tickets/${ticketId}`)
+            console.log(`🌐 API URL: ${window.location.origin}${config.apiUrl}/tickets/${ticketId}`)
 
             // API-Aufruf an Vivenu (direkter PUT auf /tickets/{ticketId})
             console.log('📡 Sende Request an Vivenu API...')
@@ -354,7 +353,7 @@ export interface TicketBarcodeUpdateResponse {
             }
 
             console.log(`📤 API Payload:`, { ticketId, payload })
-            console.log(`🌐 API URL: ${config.apiUrl}/tickets/${ticketId}`)
+            console.log(`🌐 API URL: ${window.location.origin}${config.apiUrl}/tickets/${ticketId}`)
 
             // API-Aufruf an Vivenu (direkter PUT auf /tickets/{ticketId})
             console.log('📡 Sende Request an Vivenu API...')
