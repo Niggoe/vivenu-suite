@@ -1,0 +1,56 @@
+services:
+  vivenu-suite:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: vivenu-suite-frontend
+    ports:
+      - "${VIVENU_PORT:-3000}:80"
+    environment:
+      - NODE_ENV=production
+      - VITE_VIVENU_DEV_API_URL=${VITE_VIVENU_DEV_API_URL:-https://vivenu.dev/api}
+      - VITE_VIVENU_DEV_API_KEY=${VITE_VIVENU_DEV_API_KEY}
+      - VITE_VIVENU_LIVE_API_URL=${VITE_VIVENU_LIVE_API_URL:-https://vivenu.com/api}
+      - VITE_VIVENU_LIVE_API_KEY=${VITE_VIVENU_LIVE_API_KEY}
+    networks:
+      - vivenu-network
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost/" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    labels:
+      - "vivenu.suite.version=1.0.0"
+      - "vivenu.suite.component=frontend"
+
+  # Optional: Nginx Reverse Proxy (nur bei Bedarf)
+  nginx-proxy:
+    image: nginx:alpine
+    container_name: vivenu-nginx-proxy
+    ports:
+      - "${PROXY_HTTP_PORT:-80}:80"
+      - "${PROXY_HTTPS_PORT:-443}:443"
+    volumes:
+      - ./nginx-proxy.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - vivenu-suite
+    networks:
+      - vivenu-network
+    restart: unless-stopped
+    profiles:
+      - proxy
+    labels:
+      - "vivenu.suite.component=proxy"
+
+networks:
+  vivenu-network:
+    driver: bridge
+    name: vivenu-network
+
+volumes:
+  vivenu-logs:
+    name: vivenu-suite-logs
